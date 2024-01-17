@@ -305,11 +305,17 @@ export async function deletePost(postId: string, imageId: string) {
   if (!postId || !imageId) throw Error;
 
   try {
-    await databases.deleteDocument(
+    await deleteSavedByPostId(postId);
+
+    const statusCode = await databases.deleteDocument(
       appwriteConfig.databaseId,
       appwriteConfig.postCollectionId,
       postId
     );
+
+    if (!statusCode) throw Error;
+
+    await deleteFile(imageId);
 
     return { status: 'ok' };
   } catch (error) {
@@ -373,4 +379,49 @@ export async function getUsers(limit?: number) {
   } catch (error) {
     console.log(error);
   }
+}
+
+export async function getUserPosts(userId?: string) {
+  if (!userId) return;
+
+  try {
+    const posts = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.postCollectionId,
+      [Query.equal('creator', userId), Query.orderDesc('$createdAt')]
+    );
+    if (!posts) throw Error;
+
+    return posts;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getSavedPostByPostId(postId: string) {
+  if (!postId) return;
+
+  try {
+    const posts = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.savesCollectionId,
+      [Query.equal('post', postId)]
+    );
+    if (!posts) throw Error;
+
+    return posts;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function deleteSavedByPostId(postId: string) {
+  const posts = await getSavedPostByPostId(postId);
+  const postArray = posts?.documents || [];
+
+  for (const post of postArray) {
+    await deleteSavedPost(post.$id);
+  }
+
+  return { status: 'ok' };
 }
