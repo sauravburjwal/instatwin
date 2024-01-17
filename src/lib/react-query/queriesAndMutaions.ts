@@ -11,7 +11,7 @@ import {
   deletePost,
   deleteSavedPost,
   getCurrentUser,
-  getInfintePosts,
+  getInfinitePosts,
   getPostById,
   getRecentPosts,
   getUserById,
@@ -164,7 +164,7 @@ export const useDeletePost = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ postId, imageId }: { postId: string; imageId: string }) =>
+    mutationFn: ({ postId, imageId }: { postId?: string; imageId: string }) =>
       deletePost(postId, imageId),
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -177,7 +177,8 @@ export const useDeletePost = () => {
 export const useGetPosts = () => {
   return useInfiniteQuery({
     queryKey: [QUERY_KEYS.GET_INFINITE_POSTS],
-    queryFn: getInfintePosts,
+    queryFn: getInfinitePosts,
+    // @ts-ignore
     getNextPageParam: (lastPage) => {
       if (lastPage && lastPage.documents.length === 0) return null;
 

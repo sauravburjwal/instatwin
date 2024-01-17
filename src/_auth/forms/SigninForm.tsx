@@ -8,15 +8,14 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { useToast } from '@/components/ui/use-toast';
-import { toast as Tst } from '@/components/ui/use-toast';
+  Input,
+  useToast,
+  Button,
+} from '@/components/ui';
 
-import { Button } from '@/components/ui/button';
 import { useForm } from 'react-hook-form';
 import { SigninValidation } from '@/lib/validation';
-import Loader from '@/components/shared/Loader';
+import { Loader } from '@/components/shared';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSignInAccount } from '@/lib/react-query/queriesAndMutaions';
 import { useUserContext } from '@/context/AuthContext';
@@ -58,10 +57,6 @@ const SigninForm = () => {
       form.reset();
       navigate('/');
     } else {
-      return Tst({
-        title: 'hey',
-        variant: 'destructive',
-      });
       return toast({
         title: 'Sign up failed. Please try again.',
         variant: 'destructive',
@@ -112,7 +107,7 @@ const SigninForm = () => {
             )}
           />
           <Button type="submit" className="shad-button_primary">
-            {isSigningIn ? (
+            {isSigningIn || isUserLoading ? (
               <div className="flex-center gap-2">
                 <Loader />
                 Loading...

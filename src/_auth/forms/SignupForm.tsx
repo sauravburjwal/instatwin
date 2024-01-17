@@ -8,14 +8,13 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { useToast } from '@/components/ui/use-toast';
-
-import { Button } from '@/components/ui/button';
+  Input,
+  useToast,
+  Button,
+} from '@/components/ui';
 import { useForm } from 'react-hook-form';
 import { SignupValidation } from '@/lib/validation';
-import Loader from '@/components/shared/Loader';
+import { Loader } from '@/components/shared';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   useCreateUserAccount,
@@ -150,7 +149,7 @@ const SignupForm = () => {
             )}
           />
           <Button type="submit" className="shad-button_primary">
-            {isCreatingAccount ? (
+            {isCreatingAccount || isUserLoading || isSigningIn ? (
               <div className="flex-center gap-2">
                 <Loader />
                 Loading...

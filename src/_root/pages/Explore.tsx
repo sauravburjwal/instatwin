@@ -1,7 +1,5 @@
-import GridPostList from '@/components/shared/GridPostList';
-import Loader from '@/components/shared/Loader';
-import SearchResults from '@/components/shared/SearchResults';
-import { Input } from '@/components/ui/input';
+import { GridPostList, Loader, SearchResults } from '@/components/shared';
+import { Input } from '@/components/ui';
 import useDebounce from '@/hooks/useDebounce';
 import {
   useGetPosts,
@@ -34,7 +32,7 @@ const Explore = () => {
   const shouldShowSearchResults = searchValue !== '';
   const shouldShowPosts =
     !shouldShowSearchResults &&
-    posts?.pages?.every((item) => item?.document?.length === 0);
+    posts.pages.every((item) => item?.documents.length === 0);
 
   return (
     <div className="explore-container">
@@ -78,8 +76,9 @@ const Explore = () => {
         ) : shouldShowPosts ? (
           <p className="text-light-4 mt-10 text-center w-full"> End of post</p>
         ) : (
-          posts?.pages?.map((item, index) => (
-            <GridPostList key={`page-${index}`} posts={item.documents} />
+          posts.pages.map((item, index) => (
+            // @ts-ignore
+            <GridPostList key={`page-${index}`} posts={item?.documents} />
           ))
         )}
       </div>
